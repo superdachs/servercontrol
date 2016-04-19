@@ -12,15 +12,14 @@ class Interface(models.Model):
     dns_servers = models.TextField(null=True, blank=True)
     routes = models.TextField(null=True, blank=True)
 
-
-
     def save(self, *args, **kwargs):
 
         # validate dns_servers
-        ips = self.dns_servers.split(" ")
-        for ip in ips:
-            if not re.match(r"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", ip):
-                raise Exception("IP address %s bad format" % ip)
+        if self.dns_servers:
+            ips = self.dns_servers.split(" ")
+            for ip in ips:
+                if not re.match(r"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", ip):
+                    raise Exception("IP address %s bad format" % ip)
         super(Interface, self).save(*args, **kwargs)
 
 
