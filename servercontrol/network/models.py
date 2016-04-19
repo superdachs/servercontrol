@@ -10,6 +10,9 @@ class Interface(models.Model):
     netmask = models.GenericIPAddressField(protocol='IPv4', null=True, blank=True)
     gateway_address = models.GenericIPAddressField(protocol='IPv4', null=True, blank=True)
     dns_servers = models.TextField(null=True, blank=True)
+    routes = models.TextField(null=True, blank=True)
+
+
 
     def save(self, *args, **kwargs):
 
