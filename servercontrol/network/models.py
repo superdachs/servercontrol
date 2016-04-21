@@ -48,9 +48,13 @@ class Interface(models.Model):
         # save configfile
         configfile_path = os.path.join(CONFIG_PATH, self.interface_name)
         with open(configfile_path, 'w') as configfile:
-            configfile.write("Description='%s'" % self.interface_description)
-            configfile.write("Interface=%s" % self.interface_name)
-            configfile.write("Connection=%s" % self.connection)
+            configfile.write("Description='%s'\n" % self.interface_description)
+            configfile.write("Interface=%s\n" % self.interface_name)
+            configfile.write("Connection=%s\n" % self.connection)
+            if self.dhcp:
+                configfile.write("IP=%s\n" % "dhcp")
+            else:
+                configfile.write("IP=%s\n" % "static")
 
 
 
