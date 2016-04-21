@@ -1,3 +1,4 @@
 from django.contrib import admin
+from network.models import Interface
 
-# Register your models here.
+admin.site.register(Interface)
