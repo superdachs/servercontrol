@@ -67,8 +67,15 @@ class Tools:
     
     def parse_config(self, text):
         ret = {}
-        for line in text.split('\n'):
-            print("line: " + line)
+        
+        textlines  = text.split('\n')
+
+        while '' in textlines:
+            textlines.pop(textlines.index(''))
+
+
+        for line in textlines:
+            
             key = line.split("=")[0]
             value = line.split("=")[1].strip("'").strip('"').strip('\n')
             value = value.replace("'", "")
