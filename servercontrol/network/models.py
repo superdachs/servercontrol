@@ -60,7 +60,7 @@ class Interface(models.Model):
                 prefix = int(iptools.ipv4.netmask2prefix(self.netmask))
                 configfile.write("IP=%s\n" % "static")
                 configfile.write("Address='%s/%d'\n" % (self.ipv4_address, prefix))
-                configfile.write("Gateway='%s'" % self.gateway_address)
+                configfile.write("Gateway='%s'\n" % self.gateway_address)
 
 
 
