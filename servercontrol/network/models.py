@@ -4,7 +4,7 @@ import netifaces
 import os
 from socket import inet_ntoa
 from struct import pack
-
+import iptools
 
 CONFIG_PATH = os.path.join('/', 'etc', 'netctl', 'interfaces')
 
@@ -57,7 +57,11 @@ class Interface(models.Model):
             if self.dhcp:
                 configfile.write("IP=%s\n" % "dhcp")
             else:
+                prefix = int(iptools.ipv4.netmask2prefix(self.netmask))
                 configfile.write("IP=%s\n" % "static")
+                configfile.write("Address='%s/%d'\n" % (self.ipv4_address, prefix))
+                configfile.write("Gateway='%s'" % self.gateway_address)
+
 
 
 
