@@ -133,7 +133,7 @@ class Tools:
                     if key == "Address":
                         addresses = conf[key].split()
                         ipv4_address = addresses[0].split("/")[0]
-                        ipv4_netmask = self.get_netmask_from_prefix(addresses[0].slit("/")[1])
+                        ipv4_netmask = self.get_netmask_from_prefix(addresses[0].split("/")[1])
 
                     if key == "Gateway":
                         ipv4_gateway = conf[key]
