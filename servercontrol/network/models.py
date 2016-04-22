@@ -2,6 +2,9 @@ from django.db import models
 import re
 import netifaces
 import os
+from socket import inet_ntoa
+from struct import pack
+
 
 CONFIG_PATH = os.path.join('/', 'etc', 'netctl', 'interfaces')
 
@@ -60,6 +63,30 @@ class Interface(models.Model):
 
 
 class Tools:
+
+    
+    def parse_config(self, text):
+        ret = {}
+        for line in text.split('\n'):
+            key = line.split("=")[0]
+            value = line.split("=")[1].strip("'").strip('"').strip('\n')
+            value = value.replace("'", "")
+            value = value.replace('"', '')
+
+            ret.update({key: value})
+
+        return ret
+    
+
+    def get_netmask_from_prefix(self, prefix):
+        bits = 0
+        for i in iter(range(32-prefix,32)):
+            bits |= (1 << i)
+
+        return inet_ntoa(pack('>I', bits))
+
+
+    
     # get network interfaces from system
     def get_ifaces_from_system(self):
         interfaces = {}
@@ -73,12 +100,37 @@ class Tools:
             ipv4_gateway = "0.0.0.0"
             dhcp = False
             active = False
-            
+            connection = "ethernet"
             
 
             try:
                 with open(os.path.join(CONFIG_PATH, interface), 'r') as configfile:
-                    pass
+                    text = configfile.read()
+
+                conf = self.parse_config(text)
+
+                for key in conf:
+                    if key == "Description":
+                        description = conf[key]
+                    if key == "Connection":
+                        connection = conf[key]
+                    if key == "IP":
+                        if conf[key] == "static":
+                            dhcp = False
+                        elif conf[key] == "dhcp":
+                            dhcp = True
+                    if key == "Address":
+                        addresses = conf[key].split()
+                        ipv4_address = addresses[0].split("/")[0]
+                        ipv4_netmask = self.get_netmask_from_prefix(addresses[0].slit("/")[1])
+
+                        
+
+                    
+
+
+
+
             except FileNotFoundError:
                 print("Config file not found!")
                 pass
