@@ -87,7 +87,6 @@ class Tools:
 
 
     
-    # get network interfaces from system
     def get_ifaces_from_system(self):
         interfaces = {}
          
@@ -124,7 +123,8 @@ class Tools:
                         ipv4_address = addresses[0].split("/")[0]
                         ipv4_netmask = self.get_netmask_from_prefix(addresses[0].slit("/")[1])
 
-                        
+                    if key == "Gateway":
+                        ipv4_gateway = conf[key]
 
                     
 
@@ -136,7 +136,7 @@ class Tools:
                 pass
 
             print('found interface: %s' % interface)
-            interfaces.update({interface: {"description": description, "mac": mac, "dhcp": dhcp, "ipv4_address": ipv4_address, "ipv4_netmask": ipv4_netmask, "ipv4_gateway": ipv4_gateway, 'active': active}})
+            interfaces.update({interface: {"connection": connection, "description": description, "mac": mac, "dhcp": dhcp, "ipv4_address": ipv4_address, "ipv4_netmask": ipv4_netmask, "ipv4_gateway": ipv4_gateway, 'active': active}})
 
         return interfaces
 
@@ -160,7 +160,7 @@ class Tools:
             interface_db.dns_servers = None
             interface_db.routes = None
             interface_db.active = interfaces_sys[interface_sys]['active']
-            interface_db.connection = "ethernet"
+            interface_db.connection = interfaces_sys[interface_sys]['connection']
 
             interface_db.save()
 
