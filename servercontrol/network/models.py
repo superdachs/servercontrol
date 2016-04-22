@@ -92,7 +92,7 @@ class Tools:
 
     def get_netmask_from_prefix(self, prefix):
         bits = 0
-        for i in iter(range(32-prefix,32)):
+        for i in iter(range(32-int(prefix),32)):
             bits |= (1 << i)
 
         return inet_ntoa(pack('>I', bits))
